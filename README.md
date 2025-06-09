@@ -14,7 +14,7 @@ Minimalist SRE metrics for Python web frameworks.
 ## FastAPI Installation
 
 ```bash
-pip install sre-metrics[fastapi]
+pip install sre_metrics[fastapi]
 
 ```
 
@@ -22,7 +22,7 @@ pip install sre-metrics[fastapi]
 
 ```python
 from fastapi import FastAPI
-from sre-metrics import instrument_fastapi
+from sre_metrics import instrument_fastapi
 
 app = FastAPI()
 instrument_fastapi(app)  # Metrics on :9090 by default
@@ -36,12 +36,12 @@ instrument_fastapi(app, metrics_port=9091, excluded_paths=["/healthz"])
 ### Flask Installation
 
 ```bash
-pip install sre-metrics[flask]
+pip install sre_metrics[flask]
 ```
 
 ```python
 from flask import Flask
-from sre-metrics import instrument_flask
+from sre_metrics import instrument_flask
 
 app = Flask(__name__)
 instrument_flask(app)  # Metrics on :9090
@@ -55,13 +55,17 @@ instrument_flask(app, metrics_port=9091, excluded_paths=["/healthz"])
 
 ```bash
 uv sync
+uv pip install twine fastapi flask httpx uvicorn
 uv run pytest
 rm -rf build/ dist/ sre_metrics.egg-info/
 uv run python -m build
-pip install --force-reinstall dist/sre_metrics-1.0.0-py3-none-any.whl
+pip install --force-reinstall dist/sre_metrics-*-py3-none-any.whl
 python -c "import sre_metrics;"
 
 ## twine
 uv add twine
+rm -rf build/ dist/ sre_metrics.egg-info/
+uv run python -m build
+pip install --force-reinstall dist/sre_metrics-*-py3-none-any.whl
 twine upload dist/*
 ```
