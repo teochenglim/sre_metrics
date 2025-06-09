@@ -30,6 +30,19 @@ instrument_fastapi(app)  # Metrics on :9090 by default
 # Custom port
 instrument_fastapi(app, metrics_port=9091, excluded_paths=["/healthz"])
 
+# All options
+instrument_fastapi(
+    app,
+    metrics_port=9091,               # Metrics server port (default: 9090)
+    prefix="app_",                   # Metric name prefix (default: "http_")
+    buckets=[0.1, 0.5, 1, 5],       # Latency histogram buckets in seconds
+    excluded_paths=["/healthz"],     # Path patterns to exclude from metrics
+    group_status_codes=False,        # Disable 2xx/3xx/4xx/5xx grouping
+    inprogress_labels=True,          # Add method/path labels to in-progress gauge
+    custom_labels={"env": "prod"},   # Additional labels for all metrics
+    skip_untemplated=True            # Ignore routes without path templates
+)
+
 ```
 
 
@@ -48,6 +61,46 @@ instrument_flask(app)  # Metrics on :9090
 
 # Custom options:
 instrument_flask(app, metrics_port=9091, excluded_paths=["/healthz"])
+
+# All options
+instrument_flask(
+    app,
+    metrics_port=9091,               # Metrics server port (default: 9090)
+    prefix="app_",                   # Metric name prefix (default: "http_")
+    buckets=[0.1, 0.5, 1, 5],       # Latency histogram buckets in seconds
+    excluded_paths=["/static/.*"],   # Regex patterns of paths to exclude
+    group_status_codes=True,         | Enable status code grouping (default)
+    normalize_path=lambda p: re.sub(r'/user/\d+', '/user/{id}', p), # Path normalization
+    enable_by_envvar="ENABLE_METRICS" # Only enable if env var is set
+)
+
+```
+
+## Custom Status Code Classification
+
+```python
+def custom_classifier(status_code: int) -> str:
+    if status_code == 418: return "teapot"
+    return f"{status_code//100}xx"
+
+instrument_fastapi(
+    app,
+    status_classifier=custom_classifier
+)
+
+```
+
+## Kubernetes Example
+
+```
+instrument_fastapi(
+    app,
+    custom_labels={
+        "service": os.getenv("SERVICE_NAME"),
+        "pod": os.getenv("POD_NAME"),
+        "namespace": os.getenv("NAMESPACE")
+    }
+)
 
 ```
 

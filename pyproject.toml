@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sre_metrics"
-version = "1.0.4"
+version = "1.0.5"
 description = "Minimalist SRE metrics for FastAPI and Flask"
 authors = [{name = "teochenglim", email = "teochenglim@gmail.com"}]
 readme = "README.md"

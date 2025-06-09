@@ -33,3 +33,8 @@ run-fastapi-examples: ## Launch both FastAPI & Flask example apps (in background
 
 run-flask-examples: ## Launch both FastAPI & Flask example apps (in background)
 	cd examples && python flask_app.py
+
+build-pypi: ## Build and upload package to PyPI
+	rm -rf build/ dist/ sre_metrics.egg-info/
+	uv run python -m build
+	twine upload dist/*
