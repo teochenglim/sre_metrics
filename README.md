@@ -55,7 +55,7 @@ instrument_flask(app, metrics_port=9091, excluded_paths=["/healthz"])
 
 ```bash
 uv sync
-uv pip install twine fastapi flask httpx uvicorn
+uv pip install twine fastapi flask httpx uvicorn requests
 uv run pytest
 rm -rf build/ dist/ sre_metrics.egg-info/
 uv run python -m build
