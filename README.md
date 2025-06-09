@@ -1,6 +1,6 @@
-# SRE RED Metrics
+# SRE Metrics
 
-[![PyPI](https://img.shields.io/pypi/v/red-metrics)](https://pypi.org/project/red-metrics/)
+[![PyPI](https://img.shields.io/pypi/v/-metrics)](https://pypi.org/project/sre-metrics/)
 
 Minimalist SRE metrics for Python web frameworks.
 
