@@ -1,6 +1,6 @@
 # SRE Metrics
 
-[![PyPI](https://img.shields.io/pypi/v/-metrics)](https://pypi.org/project/sre-metrics/)
+[![PyPI](https://img.shields.io/pypi/v/sre-metrics)](https://pypi.org/project/sre-metrics/)
 
 Minimalist SRE metrics for Python web frameworks.
 
