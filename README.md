@@ -4,6 +4,17 @@
 
 Minimalist SRE metrics for Python web frameworks.
 
+sre-metrics brings production-grade observability to your Python web apps with almost zero configuration in just two lines.
+
+```python
+from sre_metrics import instrument_fastapi
+instrument_fastapi(app)  # Done. Metrics on http://localhost:9090/metrics
+```
+
+you get SRE RED metrics (Rate, Errors, Duration) exposed on port 9090 (or any custom port), complete with smart buckets and auto-excluded endpoints like /metrics and /healthz. Designed for Kubernetes and cloud-native environments, it labels, normalizes paths (/user/123 → /user/{id}), and keeps overhead below 1 ms per request.
+
+Built for SREs who need actionable signals without metric sprawl, sre-metrics tracks only the golden signals, uses a single dependency (prometheus-client), and delivers identical output across frameworks. Whether you want simplicity out of the box or fine-tuned control—custom ports, prefixes, and excluded paths—it strikes the perfect 20/80 balance between ease of setup and production-ready flexibility.
+
 ## Features
 
 - Default metrics on port 9090
