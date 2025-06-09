@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sre_metrics"
+version = "1.0.0"
+description = "Minimalist SRE metrics for FastAPI and Flask"
+authors = [{name = "teochenglim", email = "teochenglim@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.115.12",
+    "flask>=3.0.3",
+    "httpx>=0.28.1",
+    "uvicorn>=0.33.0",
+    "prometheus-client>=0.12.0",
+    "twine>=6.1.0",
+]
+
+[tool.setuptools.packages.find]
+where    = ["src"]
+include  = ["sre_metrics*"]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.68.0"]
+flask = ["flask>=2.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/teochenglim/sre-metrics"
