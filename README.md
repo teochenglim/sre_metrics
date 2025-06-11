@@ -127,7 +127,7 @@ pip install --force-reinstall dist/sre_metrics-*-py3-none-any.whl
 python -c "import sre_metrics;"
 
 ## twine
-uv add twine
+uv pip install twine
 rm -rf build/ dist/ sre_metrics.egg-info/
 uv run python -m build
 pip install --force-reinstall dist/sre_metrics-*-py3-none-any.whl
