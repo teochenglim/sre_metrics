@@ -2,33 +2,53 @@ from flask import request, Response
 from prometheus_client import start_http_server
 from .core import SREMetricsCore
 import time
+import re
+from typing import Optional, List, Dict, Callable, Union
 
-class FlaskMetrics:
-    def __init__(self, app, metrics_port: int = 9090, **kwargs):
-        self.core = SREMetricsCore(**kwargs)
-        start_http_server(metrics_port)
-        app.before_request(self.before_request)
-        app.after_request(self.after_request)
-
-    def before_request(self):
-        if request.path == '/metrics' or self.core._should_exclude(request.path):
+def instrument_flask(
+    app,
+    metrics_port: int = 9090,
+    prefix: str = "http_",
+    buckets: List[float] = [0.01, 0.05, 0.1, 0.5, 1, 5],
+    excluded_paths: Optional[List[str]] = None,
+    group_status_codes: bool = True,
+    normalize_path: Optional[Callable[[str], str]] = None,
+    enable_by_envvar: Optional[str] = None
+):
+    core = SREMetricsCore(
+        prefix=prefix,
+        excluded_paths=excluded_paths,
+        buckets=tuple(buckets),
+        group_status_codes=group_status_codes,
+        normalize_path=normalize_path,
+        enable_by_envvar=enable_by_envvar
+    )
+    
+    start_http_server(metrics_port)
+    
+    @app.before_request
+    def before_request():
+        if request.path == '/metrics' or core._should_exclude(request.path):
             return
-        self.core.in_progress.inc()
+        core.in_progress.inc()
         request.start_time = time.time()
 
-    def after_request(self, response: Response):
-        if request.path == '/metrics' or self.core._should_exclude(request.path):
+    @app.after_request
+    def after_request(response: Response):
+        if request.path == '/metrics' or core._should_exclude(request.path):
             return response
             
-        self.core.record_metrics(
-            request.method,
-            request.path,
-            response.status_code,
-            time.time() - request.start_time
+        path = request.path
+        if core.normalize_path:
+            path = core.normalize_path(path)
+            
+        core.record_metrics(
+            method=request.method,
+            path=path,
+            status_code=response.status_code,
+            duration=time.time() - request.start_time
         )
-        self.core.in_progress.dec()
+        core.in_progress.dec()
         return response
-
-def instrument_flask(app, **kwargs):
-    """Public interface for Flask instrumentation"""
-    return FlaskMetrics(app, **kwargs)
+    
+    return app
